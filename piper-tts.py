@@ -16,7 +16,7 @@ def notify(text):
     subprocess.Popen(f"notify-send '{text}'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 def read_aloud_stream(text):
-    notify('Reading aloud')
+    notify('Reading aloud, press CTRL+ALT to stop')
     echo_process = subprocess.Popen(["echo", text], stdout=subprocess.PIPE)
     piper_process = subprocess.Popen([piper_dir, "--model", directory + "/" + voice_model, "-s", "7", "--output-raw"], stdin=echo_process.stdout, stdout=subprocess.PIPE)
     aplay_process = subprocess.Popen(["aplay", "-r", "22050", "-f", "S16_LE", "-t", "raw", "-"], stdin=piper_process.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -25,7 +25,7 @@ def read_aloud_stream(text):
     return aplay_process
 
 def read_aloud_file(text):
-    notify('Reading aloud, press CTRL+ALT to stop')
+    notify('Reading aloud')
     echo_process = subprocess.Popen(["echo", text], stdout=subprocess.PIPE)
     piper_process = subprocess.Popen([piper_dir, "--model", directory + "/" + voice_model, "-s", "7", "--output_file", directory+'/output.wav'], stdin=echo_process.stdout, stdout=subprocess.PIPE)
     time.sleep(0.1)
@@ -45,17 +45,21 @@ def on_release(key):
     # Remove the released key from the set
     pressed_keys.discard(key)
 
+def get_selected_text():
+    return subprocess.check_output(['xclip', '-o', '-selection', 'primary']).decode('utf-8').strip()
+
 def main():
-    clipboard_content = pyperclip.paste()
-    print(clipboard_content)
+    # text_to_read = pyperclip.paste()
+    text_to_read = get_selected_text()
+    print(text_to_read)
     
     use_file = False
     
     if use_file:
-        read_aloud_file(clipboard_content)
+        read_aloud_file(text_to_read)
     else:
         # Start recording
-        read_aloud_stream(clipboard_content)
+        read_aloud_stream(text_to_read)
 
         # Start listening to keyboard events
         with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
