@@ -2,7 +2,7 @@
 
 This project depends on xclip on linux. Install with
 ```bash
-sudo apt-get install xlip
+sudo apt-get install xclip
 ```
 
 You may want to create a conda env
