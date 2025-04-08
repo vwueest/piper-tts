@@ -6,7 +6,7 @@ Piper-TTS is lightweight, easy script to read marked text to you! Mark, hit shor
 
 Based on the popular [piper project](https://github.com/rhasspy/piper).
 
-## installation
+## Installation
 
 This project depends on xclip on linux. Install with
 ```bash
