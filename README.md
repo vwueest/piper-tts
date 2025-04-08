@@ -1,5 +1,13 @@
 # Piper for text to speech
 
+Ever want to read an article, but actually have some dishes or other manual task to do? No problem, just use Piper-TTS to listen to it instead.
+
+Piper-TTS is lightweight, easy script to read marked text to you! Mark, hit shortcut, listen ...
+
+Based on the popular [piper project](https://github.com/rhasspy/piper).
+
+## installation
+
 This project depends on xclip on linux. Install with
 ```bash
 sudo apt-get install xclip
@@ -25,3 +33,11 @@ wget https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/libritt
 
 find available voice examples [here](https://rhasspy.github.io/piper-samples/)
 
+## Usage
+The easiest way to use Piper-TTS by connecting the `piper-tts.py` file to a keyboard shortcut. On linux, you can for example assing CTRL+ALT+R to run `/usr/bin/python3 $HOME/src/piper-tts/piper-tts.py`. 
+
+That's it, mark some text, hit the shortcut and listen.
+
+## License
+
+Like Piper, this project is published under the MIT License.
