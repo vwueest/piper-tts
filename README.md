@@ -1,10 +1,10 @@
 # Piper for text to speech
 
-Ever want to read an article, but actually have some dishes or other manual task to do? No problem, just use Piper-TTS to listen to it instead.
+Ever want to read an article, but actually have some dishes or other manual task to do? No problem, just use Piper-TTS to listen to it instead. 
 
-Piper-TTS is lightweight, easy script to read marked text to you! Mark, hit shortcut, listen ...
+Piper-TTS is a lightweight, easy script to read marked text to you! Mark, hit shortcut, listen ... 🗣️💬
 
-Based on the popular [piper project](https://github.com/rhasspy/piper).
+Piper-TTS is based on the popular [piper project](https://github.com/rhasspy/piper).
 
 ## Installation
 
@@ -23,18 +23,16 @@ Install the required python packages with
 pip install -r requirements.txt
 ```
 
-based on the [piper project](https://github.com/rhasspy/piper)
-
-download models from [here](https://github.com/rhasspy/piper/blob/master/VOICES.md) and rename the json file to `{model}.onnx.json`. By default we use `en_US-libritts_r-medium.onnx` and its config file `en_US-libritts_r-medium.onnx.json`. Currently , these can be downloaded with the following commands:
+Download models from [here](https://github.com/rhasspy/piper/blob/master/VOICES.md) and rename the json file to `{model}.onnx.json`. By default we use `en_US-libritts_r-medium.onnx` and its config file `en_US-libritts_r-medium.onnx.json`. Currently , these can be downloaded with the following commands:
 ```bash
 wget https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/libritts_r/medium/en_US-libritts_r-medium.onnx
 wget https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/libritts_r/medium/en_US-libritts_r-medium.onnx.json
 ```
 
-find available voice examples [here](https://rhasspy.github.io/piper-samples/)
+To find other voices, find available examples [here](https://rhasspy.github.io/piper-samples/).
 
 ## Usage
-The easiest way to use Piper-TTS by connecting the `piper-tts.py` file to a keyboard shortcut. On linux, you can for example assing CTRL+ALT+R to run `/usr/bin/python3 $HOME/src/piper-tts/piper-tts.py`. 
+The easiest way to use Piper-TTS is by running the `piper-tts.py` file when hitting a keyboard shortcut. On linux, you can for example assing CTRL+ALT+R to run `$HOME/anaconda/envs/piper/bin/piper/python3 $HOME/src/piper-tts/piper-tts.py`. 
 
 That's it, mark some text, hit the shortcut and listen.
 
