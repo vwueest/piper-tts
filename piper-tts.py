@@ -4,6 +4,7 @@ import pyperclip
 import os.path as path
 import piper
 import os
+import sys
 from pynput import keyboard
 import threading
 
@@ -17,6 +18,8 @@ def notify(text):
     subprocess.Popen(f"notify-send '{text}'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 def read_aloud_stream(text):
+    text = text.replace('*', '')
+    text = text.replace('\n', ' ')
     notify('Reading aloud, press CTRL+ALT to stop')
     echo_process = subprocess.Popen(["echo", text], stdout=subprocess.PIPE)
     piper_process = subprocess.Popen([piper_dir, "--model"] + voice_model + voice_parameters + ["--output-raw"], stdin=echo_process.stdout, stdout=subprocess.PIPE)
@@ -28,6 +31,7 @@ def read_aloud_stream(text):
 def read_aloud_file(text):
     notify('Reading aloud')
     echo_process = subprocess.Popen(["echo", text], stdout=subprocess.PIPE)
+    print([piper_dir, "--model"] + voice_model + voice_parameters + ["--output_file", directory+'/output.wav'])
     piper_process = subprocess.Popen([piper_dir, "--model"] + voice_model + voice_parameters + ["--output_file", directory+'/output.wav'], stdin=echo_process.stdout, stdout=subprocess.PIPE)
     time.sleep(0.1)
     aplay_process = subprocess.Popen(["open",directory+"/output.wav"], stdin=piper_process.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -52,16 +56,25 @@ def get_selected_text():
     except:
         subprocess.run(["notify-send", "Install xclip"])
 
-def main():
-    # text_to_read = pyperclip.paste()
-    text_to_read = get_selected_text()
-    print(text_to_read)
-    
-    use_file = False
+def clean_text(text):
+    return text.replace('*', '').replace('\n', ' ')
 
-    if use_file:
+def main():
+    if len(sys.argv) > 1:
+        # If a file is provided as an argument, read from the file
+        with open(sys.argv[1], 'r') as file:
+            text_to_read = file.read()
+        print('converting the following text:')
+        print(text_to_read)
         read_aloud_file(text_to_read)
+        print('done')
     else:
+        # If no file is provided, use the original method to get the text
+        text_to_read = get_selected_text()
+        text_to_read = clean_text(text_to_read)
+
+        print(text_to_read)
+
         # Start recording
         read_aloud_stream(text_to_read)
 
