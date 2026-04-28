@@ -9,6 +9,7 @@ directory = path.dirname(path.abspath(__file__))
 voice_model = [directory + "/" + "en_US-libritts_r-medium.onnx", "-s", "7"]
 voice_parameters = ["--sentence-silence", "0.2", "--noise-scale", "0.3", "--length-scale", "1.2"]
 pressed_keys = set()
+active_processes = []  # track child processes for cleanup
 
 
 def get_piper_binary():
@@ -34,7 +35,7 @@ def notify(text):
 
 def read_aloud_stream(text):
     text = clean_text(text)
-    notify("Reading aloud, press CTRL+ALT to stop")
+    notify("Reading aloud, press CTRL+ALT+X to stop")
     piper_bin = get_piper_binary()
     echo_process = subprocess.Popen(["echo", text], stdout=subprocess.PIPE)
     piper_process = subprocess.Popen(
@@ -47,7 +48,17 @@ def read_aloud_stream(text):
     )
     echo_process.stdout.close()
     piper_process.stdout.close()
+    active_processes.extend([piper_process, aplay_process])
     return aplay_process
+
+
+def kill_active_processes():
+    for proc in active_processes:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+    active_processes.clear()
 
 
 def read_aloud_file(text):
@@ -71,7 +82,11 @@ def read_aloud_file(text):
 def on_press(key):
     from pynput import keyboard as kb
     pressed_keys.add(key)
-    if kb.Key.alt in pressed_keys and (kb.Key.ctrl_l in pressed_keys or kb.Key.ctrl_r in pressed_keys):
+    ctrl = kb.Key.ctrl_l in pressed_keys or kb.Key.ctrl_r in pressed_keys
+    alt = kb.Key.alt in pressed_keys or kb.Key.alt_l in pressed_keys or kb.Key.alt_r in pressed_keys
+    x = key == kb.KeyCode.from_char('x')
+    if ctrl and alt and x:
+        kill_active_processes()
         return False
 
 
@@ -123,7 +138,7 @@ def main():
         with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
             listener.join()
 
-        subprocess.Popen(["pkill", "-f", "piper"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        kill_active_processes()
 
 
 if __name__ == "__main__":
